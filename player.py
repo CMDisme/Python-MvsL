@@ -1,5 +1,5 @@
 ########################################################################
-#   Author: Nolan Y. / bbomb64 / Christopher D.                        #                                                                      #
+#   Author: Nolan Y. / bbomb64 / Christopher D.                        #                                                                      
 #   Description: Player class/functions                                #
 ########################################################################
 
@@ -15,14 +15,18 @@ V_ACCELERATION = 0.1
 GRAVITY = 2.5
 
 class Player(object):
-    def __init__(self, skin = None, height = 0, weight = 0.2, player_number = 0):
+    def __init__(self, playerSprite = None, x = 100, height = 0, weight = 0.2, player_number = 0, up = pygame.K_UP,down = pygame.K_DOWN, left = pygame.K_LEFT,right = pygame.K_RIGHT):
         self.player_number = player_number
+        self.playerSprite = playerSprite
         # Used to determine what sprites to load for the player
-        self.skin = skin
-        self.x = 100
+        self.x = x
         self.y = 100
         self.x_velocity = 0.00
         self.y_velocity = 0.00
+        self.up = up
+        self.down = down
+        self.left = left
+        self.right = right
         # Number is from height of the player sprite in pixles
         self.height = height
         self.weight = weight

@@ -46,18 +46,14 @@ screen = screenSize(WIDTH, HEIGHT, None, None, False)
 frame = 0
 nextFrame = clock()
 
-# Define player controls
-up = pygame.K_UP
-down = pygame.K_DOWN
-left = pygame.K_LEFT
-right = pygame.K_RIGHT
-
 # Create a player
-player = Player("Sprites/Mario.png", -10)
-playerSprite = makeSprite(player.skin, 15)
+mario = Player(makeSprite("Sprites/Mario.png",15), 100,-10)
+player1 = Player(makeSprite("Sprites/idle.png",15), 150,-24,.2,1,pygame.K_w,pygame.K_s,pygame.K_a,pygame.K_d)
+players = [mario,player1]
 
 # Display Sprites as they're needed
-showSprite(playerSprite)
+for player in players:
+    showSprite(player.playerSprite)
 
 # Define misc. Player variables
 last_held_direction = "right"
@@ -72,95 +68,97 @@ while True:
     keys = pygame.key.get_pressed()
 
     # Update the player's sprite when idling
-    if (player.check_jump(level) == True):
-        if (idle == False):
-            # If the last input was to the right, face the Player's sprite to the right
-            if (last_held_direction == "right"):
-                changeSpriteImage(playerSprite, 3*3+1)
-                updated = True
-            # Otherwise, face Mario's sprite to the left
-            else:
-                changeSpriteImage(playerSprite, 0*3+1)
-                updated = True
-
-    # Set the last held direction to right, and update the player's walk animation if they're on the ground
-    if keys[right]:
-        last_held_direction = "right"
-
-        # Check to see if the player is on the ground before applying the sprite change
+    for player in players:
         if (player.check_jump(level) == True):
-            # Update the player's sprite when walking
-            changeSpriteImage(playerSprite, 3*3+frame)
+            if (idle == False):
+                # If the last input was to the right, face the Player's sprite to the right
+                if (last_held_direction == "right"):
+                    changeSpriteImage(player.playerSprite, 3*3+1)
+                    updated = True
+                # Otherwise, face Mario's sprite to the left
+                else:
+                    changeSpriteImage(player.playerSprite, 0*3+1)
+                    updated = True
 
-        player.HorizontalVelocity(last_held_direction, skidding, playerSprite)
- 
-    # Set the last held direction to left, and update the player's walk animation if they're on the ground           
-    elif keys[left]:
-        last_held_direction = "left"
+        # Set the last held direction to right, and update the player's walk animation if they're on the ground
+        if keys[player.right]:
+            last_held_direction = "right"
 
-        # Check to see if the player is on the ground before applying the sprite change
-        if (player.check_jump(level) == True):
-            # Update the player's sprite when walking
-            changeSpriteImage(playerSprite, 0*3+frame)
+            # Check to see if the player is on the ground before applying the sprite change
+            if (player.check_jump(level) == True):
+                # Update the player's sprite when walking
+                changeSpriteImage(player.playerSprite, 3*3+frame)
 
-        player.HorizontalVelocity(last_held_direction, skidding, playerSprite)
-    
-    elif keys[down]:
-        # If the player is on the ground, make them duck
-        if player.check_jump(level) == True:
-            changeSpriteImage(playerSprite, 5*3 - 1)
-        # Apply friction to the player
-        player.Friction()
-            
-    # Apply friction to the player if they are not holding a button or ducking
-    # (slow them to a hault)
-    else:
-        # Apply friction to the player
-        player.Friction()
+            player.HorizontalVelocity(last_held_direction, skidding, player.playerSprite)
+     
+        # Set the last held direction to left, and update the player's walk animation if they're on the ground           
+        elif keys[player.left]:
+            last_held_direction = "left"
 
-    # Generate player y velocity
-    # Check to see if the player can jump
-    if keys[up]:
-        if player.check_jump(level) == True:
-            # If the last input was to the right, face the Player's sprite to the right
-            if (last_held_direction == "right"):
-                changeSpriteImage(playerSprite, 2*3+frame)
-            # Otherwise, face Mario's sprite to the left
-            else:
-                changeSpriteImage(playerSprite, 1*3+frame)
-            player.VerticalVelocity()
+            # Check to see if the player is on the ground before applying the sprite change
+            if (player.check_jump(level) == True):
+                # Update the player's sprite when walking
+                changeSpriteImage(player.playerSprite, 0*3+frame)
 
+            player.HorizontalVelocity(last_held_direction, skidding, player.playerSprite)
+        
+        elif keys[player.down]:
+            # If the player is on the ground, make them duck
+            if player.check_jump(level) == True:
+                changeSpriteImage(player.playerSprite, 5*3 - 1)
+            # Apply friction to the player
+            player.Friction()
+                
+        # Apply friction to the player if they are not holding a button or ducking
+        # (slow them to a hault)
         else:
+            # Apply friction to the player
+            player.Friction()
+
+        # Generate player y velocity
+        # Check to see if the player can jump
+        if keys[player.up]:
+            if player.check_jump(level) == True:
+                # If the last input was to the right, face the Player's sprite to the right
+                if (last_held_direction == "right"):
+                    changeSpriteImage(player.playerSprite, 2*3+frame)
+                # Otherwise, face Mario's sprite to the left
+                else:
+                    changeSpriteImage(player.playerSprite, 1*3+frame)
+                player.VerticalVelocity()
+
+            else:
+                # If the last input was to the right, face Mario's sprite to the right
+                if (last_held_direction == "right"):
+                    changeSpriteImage(player.playerSprite, 2*3+frame)
+                # Otherwise, face Mario's sprite to the left
+                else:
+                    changeSpriteImage(player.playerSprite, 1*3+frame)
+                # If the player can't jump, continue to apply gravity
+                player.gravity(GRAVITY,level)
+
+        # Apply gravity to the player
+        elif (player.check_jump(level) == False):
             # If the last input was to the right, face Mario's sprite to the right
             if (last_held_direction == "right"):
-                changeSpriteImage(playerSprite, 2*3+frame)
+                changeSpriteImage(player.playerSprite, 2*3+frame)
             # Otherwise, face Mario's sprite to the left
             else:
-                changeSpriteImage(playerSprite, 1*3+frame)
-            # If the player can't jump, continue to apply gravity
+                changeSpriteImage(player.playerSprite, 1*3+frame)
             player.gravity(GRAVITY,level)
 
-    # Apply gravity to the player
-    elif (player.check_jump(level) == False):
-        # If the last input was to the right, face Mario's sprite to the right
-        if (last_held_direction == "right"):
-            changeSpriteImage(playerSprite, 2*3+frame)
-        # Otherwise, face Mario's sprite to the left
         else:
-            changeSpriteImage(playerSprite, 1*3+frame)
-        player.gravity(GRAVITY,level)
-
-    else:
-        player.gravity(GRAVITY,level)
+            player.gravity(GRAVITY,level)
+            
     
     if (DEBUG):
-        print(player)
+        print(mario,player1)
 
     # Limit the framerate to 60 FPS
     tick(60)
-
-    player.calculatePosition()
-    updated_position = player.check_collision(level)
+    for player in players:
+        player.calculatePosition()
+        updated_position = player.check_collision(level)
 
     
     #Render the screen
@@ -171,7 +169,8 @@ while True:
                 screen.blit(pygame.image.load(tile.tile_image), [tile.x + (w * 16), tile.y - (h * 16)])
 
     # Update the player's sprite location
-    moveSprite(playerSprite, player.x, player.y + player.height)
+    for player in players:
+        moveSprite(player.playerSprite, player.x, player.y + player.height)
     updateDisplay()
     # Limits the frame rate of sprites (60 FPS walk cycle is bad)
     if clock() > nextFrame:
