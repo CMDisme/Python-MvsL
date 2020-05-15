@@ -1,9 +1,5 @@
 ########################################################################
-<<<<<<< HEAD
-#   Author: Nolan Y.                                                   #
-=======
 #   Author: Nolan Y. / bbomb64 / Christopher D.                        #
->>>>>>> Contributor
 #                                                                      #
 #   Description: Level/Tile handeler                                   #
 ########################################################################
@@ -13,33 +9,20 @@ import sys
 sys.path.insert(1, "./Tiles")
 
 class Tile(object):
-<<<<<<< HEAD
-    def __init__(self, tile_image, tile_friction, x, y, height = 16, width = 16):
-=======
     def __init__(self, tile_image, tile_friction, x, y, width = 16, height = 16):
->>>>>>> Contributor
         self.tile_image = tile_image
         self.tile_friction = tile_friction
         self.x = x
         self.y = y
         self.top = y - height
         self.width = width
-<<<<<<< HEAD
-        self.left = x - (width/2)
-        self.right = x + (width/2)
-=======
         self.height = height
         self.left = x
         self.right = x + width
->>>>>>> Contributor
 
     def __str__(self):
         return "Tile X Coord: {}\nTile Y Coord: {}".format(self.x, self.y)
 
-<<<<<<< HEAD
-levelchunk1 = [Tile("Tiles/Grass_Top.png", 0.0, 85,  150),Tile("Tiles/Grass_Top.png", 0.0, 115,  150), Tile("Tiles/Grass_Top.png", 0.0, 130,  150), Tile("Tiles/Grass_Top.png", 0.0, 145,  150), Tile("Tiles/Grass_Top.png", 0.0, 160,  150), Tile("Tiles/Grass_Top.png", 0.0, 100,  150), Tile("Tiles/Grass_Top.png", 0.0, 70,  150), Tile("Tiles/Grass_Top.png", 0.0, 115,  135)]
-tile = Tile("Tiles/Grass_Top.png", 0.0, 100,  150)
-=======
 class Level():
   def __init__(self, fn):
     self.fn = fn
@@ -158,4 +141,3 @@ class Level():
               else:
                   return False,tile.left - 20
 
->>>>>>> Contributor
