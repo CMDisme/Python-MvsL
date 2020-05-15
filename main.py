@@ -6,7 +6,7 @@
 ########################################################################
 
 # Enable/Disable DEBUG mode
-DEBUG = True
+DEBUG = False
 
 # Enable/Disable Player 2
 P2 = True
@@ -16,6 +16,7 @@ from pygame_functions import *
 import sys
 from level import *
 from player import *
+from cmap import *
 
 # Allows us to use another folder than the folder this file is located
 sys.path.insert(1, "./Sprites")
@@ -33,6 +34,7 @@ sys.path.insert(1, "./Sprites")
 # Load Level Data
 levelchunk1 = []
 level = Level("Levels/1-1.lvl")
+cmap = CMap("Cmap/1-1.cmap")
 
 # Define some constants
 BLACK = (0, 0, 0)
@@ -47,10 +49,10 @@ frame = 0
 nextFrame = clock()
 
 # Create a player
-mario = Player(makeSprite("Sprites/Mario.png",15), -10)
+mario = Player(makeSprite("Sprites/Mario.png",15), -26)
 
 if P2: #Experimental 
-    luigi = Player(makeSprite("Sprites/Luigi.png",15), -15, 0.2, 1, pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d,50)
+    luigi = Player(makeSprite("Sprites/Luigi.png",15), -31, 0.2, 1, pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d,50)
     players = mario, luigi
 else:
     players = [mario]
@@ -69,7 +71,7 @@ while True:
     # Get player inputs
     for player in players:
         # Turn inputs into movement
-        player.RefineInput(keys, level, player.playerSprite, frame)        
+        player.RefineInput(keys, cmap, player.playerSprite, frame,level)        
 
         # Debug
         if (DEBUG):
@@ -77,8 +79,11 @@ while True:
     
         # Calculate and update position
         player.calculatePosition()
-        updated_position = player.check_collision(level)        
-
+        updated_position = player.check_collision(cmap)        
+        player.x = updated_position[0]
+        player.y = updated_position[1]
+        player.x_velocity = updated_position[2]
+        player.y_velocity = updated_position[3]
         # Check for death
         player.death()
 

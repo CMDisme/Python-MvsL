@@ -5,6 +5,7 @@
 
 from pygame_functions import *
 from level import *
+from cmap import *
 SIZE = WIDTH, HEIGHT = 320, 240
 wrap_around = True
 
@@ -47,7 +48,7 @@ class Player(object):
         self.idle = False
         self.skidding = False
     
-    def gravity(self, gravity, level):
+    def gravity(self, gravity, level,cmap):
         p_weight = self.weight
         if ((self.y_velocity >= self.VSPEED_CAP) and (self.y_velocity < 0)):
             if p_weight <= gravity:
@@ -60,7 +61,7 @@ class Player(object):
             if self.y_velocity >= 0:
                 self.y_velocity = 0.0
 
-        elif((self.y_velocity >= 0.0) and (self.check_fall(level) ==False)):
+        elif((self.y_velocity >= 0.0) and (self.check_fall(cmap) ==False)):
             if p_weight <= gravity:
                 p_weight += gravity
             else:
@@ -71,15 +72,15 @@ class Player(object):
                 self.y_velocity = self.VSPEED_CAP
 
         else:            
-            if self.check_fall(level) != False:
+            if self.check_fall(cmap) != False:
                 self.y_velocity = 0.0
-                self.y = self.check_fall(level)
+                self.y = self.check_fall(cmap)[1]
         if self.y_velocity > self.DSPEED_CAP:
                 self.y_velocity = self.DSPEED_CAP
     
     # "Kill" the player when their y value >= 4000
     def death(self):
-        if self.y >= 4000:
+        if self.y >= HEIGHT:
             self.respawn()
 
     # Really basic respawn function (set the players x & y pos. to 100)
@@ -88,15 +89,15 @@ class Player(object):
         self.y = 100
 
     # Check to see if the player can jump
-    def check_jump(self,level):
-        if level.tile_on(self.x, self.y) != False:
+    def check_jump(self,cmap):
+        if cmap.on_tile(self.x,self.y) != False:
             return True
         return False
 
     # Check to see if the player should have gravity applied
-    def check_fall(self,level):
-        if level.tile_on(self.x,self.y) != False:
-            return level.tile_on(self.x, self.y)
+    def check_fall(self,cmap):
+        if cmap.on_tile(self.x,self.y) != False:
+            return cmap.on_tile(self.x, self.y)
         return False
 
     def calculatePosition(self):
@@ -113,38 +114,11 @@ class Player(object):
         self.y += self.y_velocity
 
     # Check if a player touches part of a tile
-    def check_collision(self,level):
-        if level.under_tile(self.x,self.y-20) != False:
-            self.y = level.under_tile(self.x,self.y - 20)
-            self.y_velocity = 0
-            return
-
-        if level.tile_on(self.x,self.y) != False and level.in_tile(self.x,self.y) == False:
-            self.y = level.tile_on(self.x,self.y)
-            self.y_velocity = 0
-            return
-        
-        if level.in_tile(self.x,self.y) != False:
-            if level.in_tile(self.x,self.y)[0] == False:
-                self.x = level.in_tile(self.x,self.y)[1]
-                self.x_velocity = 0
-                return 
-            else:
-                self.y = level.in_tile(self.x,self.y)[1]
-                self.y_velocity = 0
-                return
-        
-        if level.in_tile(self.x,self.y-20) != False:
-            if level.in_tile(self.x,self.y-20)[0] == True:
-                self.y = level.in_tile(self.x,self.y-20)[1] + 20
-                self.y_velocity = 0
-                return 
-            else:
-                self.x = level.in_tile(self.x,self.y-20)[1]
-                self.x_velocity = 0
-                return                
-        return
-    
+    def check_collision(self,cmap):
+        if self.y >= HEIGHT:
+            return self.x,self.y,self.x_velocity,self.y_velocity,False
+        return cmap.in_tile(self.x,self.y,self.x_velocity,self.y_velocity)
+            
     # Make the player have friction against the ground
     def Friction(self):
         if ((self.x_velocity <= self.SPEED_CAP) and (self.x_velocity > 0)):
@@ -205,9 +179,9 @@ class Player(object):
             self.y_velocity = self.VSPEED_CAP
 
     # Allow the user to control the player
-    def RefineInput(self, keys, level, playerSprite, frame):
+    def RefineInput(self, keys, cmap, playerSprite, frame,level):
         # Update the player's sprite when idling
-        if (self.check_jump(level) == True):
+        if (self.check_jump(cmap) == True):
             if (self.idle == False):
                 # If the last input was to the right, face the Player's sprite to the right
                 if (self.last_held_direction == "right"):
@@ -223,7 +197,7 @@ class Player(object):
             self.last_held_direction = "right"
 
             # Check to see if the player is on the ground before applying the sprite change
-            if (self.check_jump(level) == True):
+            if (self.check_jump(cmap) == True):
                 # Update the player's sprite when walking
                 changeSpriteImage(playerSprite, 3*3+frame)
 
@@ -234,7 +208,7 @@ class Player(object):
             self.last_held_direction = "left"
 
             # Check to see if the player is on the ground before applying the sprite change
-            if (self.check_jump(level) == True):
+            if (self.check_jump(cmap) == True):
                 # Update the player's sprite when walking
                 changeSpriteImage(playerSprite, 0*3+frame)
 
@@ -242,7 +216,7 @@ class Player(object):
         
         elif keys[self.down]:
             # If the player is on the ground, make them duck
-            if self.check_jump(level) == True:
+            if self.check_jump(cmap) == True:
                 changeSpriteImage(playerSprite, 5*3 - 1)
             # Apply friction to the player
             self.Friction()
@@ -255,7 +229,7 @@ class Player(object):
 
         # Check to see if the player can jump
         if keys[self.up]:
-            if self.check_jump(level) == True:
+            if self.check_jump(cmap) == True:
                 # If the last input was to the right, face the Player's sprite to the right
                 if (self.last_held_direction == "right"):
                     changeSpriteImage(playerSprite, 2*3+frame)
@@ -272,20 +246,20 @@ class Player(object):
                 else:
                     changeSpriteImage(playerSprite, 1*3+frame)
                 # If the player can't jump, continue to apply gravity
-                self.gravity(GRAVITY,level)
+                self.gravity(GRAVITY,level,cmap)
 
         # Apply gravity to the player
-        elif (self.check_jump(level) == False):
+        elif (self.check_jump(cmap) == False):
             # If the last input was to the right, face Mario's sprite to the right
             if (self.last_held_direction == "right"):
                 changeSpriteImage(playerSprite, 2*3+frame)
             # Otherwise, face Mario's sprite to the left
             else:
                 changeSpriteImage(playerSprite, 1*3+frame)
-            self.gravity(GRAVITY,level)
+            self.gravity(GRAVITY,level,cmap)
 
         else:
-            self.gravity(GRAVITY,level)
+            self.gravity(GRAVITY,level,cmap)
 
     # Print stats of the player when called
     def __str__(self):
