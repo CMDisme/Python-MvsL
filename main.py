@@ -6,7 +6,7 @@
 ########################################################################
 
 # Enable/Disable DEBUG mode
-DEBUG = True
+DEBUG = False
 
 # Import things I might need
 from pygame_functions import *
@@ -19,7 +19,6 @@ sys.path.insert(1, "./Sprites")
 
 #---------------------------------#
 ##########--BEGIN CLASSES--##########
-  
 ##########--END CLASSES--##########
 #---------------------------------#
 ##########--BEING FUNCTIONS--######
@@ -146,10 +145,8 @@ while True:
             else:
                 changeSpriteImage(player.playerSprite, 1*3+frame)
             player.gravity(GRAVITY,level)
-
         else:
             player.gravity(GRAVITY,level)
-            
     
     if (DEBUG):
         print(mario,player1)
