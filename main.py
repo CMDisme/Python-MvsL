@@ -11,9 +11,6 @@ DEBUG = True
 # Enable/Disable Player 2
 P2 = True
 
-# Enable/Disable Player 2
-P2 = True
-
 # Import things I might need
 from pygame_functions import *
 import sys
@@ -36,9 +33,11 @@ sys.path.insert(1, "./Sprites")
 
 # Load Level Data
 levelchunk1 = []
-level = Level("Levels/1-1.lvl")
 
+# This recreates the collision map automatically
 cmap = CMap("Cmap/1-1.cmap")
+cmap.create_cmap("Levels/1-1.lvl")
+level = Level("Levels/1-1.lvl")
 
 # Define some constants
 BLACK = (0, 0, 0)
@@ -48,49 +47,36 @@ WHITE  = (255, 255, 255)
 # Note: WIDTH & HEIGHT are imported from player.py!
 screen = screenSize(WIDTH, HEIGHT, None, None, False)
 
-amap = []
-
-
-for y in range(20):
-    for x in range(50):
-        amap.append(cmap.get_tile(x, y,1))
-    cmap.cmalp.append(amap)
-    amap = []
 # Frame handler (used for any sprite animation)
 frame = 0
 nextFrame = clock()
 
 # Create a player
-
-mario = Player(makeSprite("Sprites/Mario.png",15), -26)
+mario = Player("Sprites/Mario/")
 
 if P2: #Experimental 
-    luigi = Player(makeSprite("Sprites/Luigi.png",15), -31, [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], 1,25,100)
-
-    players = mario, luigi
+    luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]\
+                   , 1, 25, 100, 16, 20)
+    players = [mario, luigi]
 else:
     players = [mario]
     
 # Load the Player's sprites
 for player in players:
+    spriteSheet = player.powerupHandler(player.powerupState)
+    player.playerSprite = makeSprite(spriteSheet, 18)
     showSprite(player.playerSprite)
 
 while True:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT: sys.exit()
-
     keys = pygame.key.get_pressed()
 
     # Get player inputs
     for player in players:
         # Turn inputs into movement
-
-        player.RefineInput(keys, cmap, player.playerSprite, frame,level)        
-
-        # Debug
-        if (DEBUG):
-            print(player)
+        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, level)        
     
         # Calculate and update position
         player.calculatePosition()
@@ -103,7 +89,14 @@ while True:
         # Check for death
         player.death()
 
-        
+    # Debug
+        if (DEBUG):
+            if keys[pygame.K_0]:
+                mario.hurt()
+
+            if keys[pygame.K_1]:
+                mario.powerupState = 2
+                mario.hurt()
         
     # Limit the framerate to 60 FPS
     tick(60)
@@ -117,11 +110,10 @@ while True:
 
     # Update the player's sprite location
     for player in players:
-
-        moveSprite(player.playerSprite, player.x+7, player.y+8 + player.height)
+        moveSprite(player.playerSprite, player.x + player.draw_width, player.y + player.draw_height)
 
     updateDisplay()
     # Limits the frame rate of sprites (60 FPS walk cycle is bad)
     if clock() > nextFrame:
-        frame = (frame+1)%3
+        frame = (frame+1)%2
         nextFrame += 60
