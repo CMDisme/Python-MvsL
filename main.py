@@ -49,23 +49,23 @@ screen = screenSize(WIDTH, HEIGHT, None, None, False)
 
 # Frame handler (used for any sprite animation)
 frame = 0
+superFrame = 0
 nextFrame = clock()
 
 # Create a player
 mario = Player("Sprites/Mario/")
 
 if P2: #Experimental 
-    luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]\
-                   , 1, 25, 100, 16, 20)
+    luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_LSHIFT]\
+                   , 1, 15, 100, 10, 20)
     players = [mario, luigi]
 else:
     players = [mario]
     
 # Load the Player's sprites
 for player in players:
-    spriteSheet = player.powerupHandler(player.powerupState)
-    player.playerSprite = makeSprite(spriteSheet, 18)
-    showSprite(player.playerSprite)
+    # The powerup handler already creates the player sprite, so use this to initalize the players
+    player.powerupHandler(0)
 
 while True:
     events = pygame.event.get()
@@ -76,7 +76,7 @@ while True:
     # Get player inputs
     for player in players:
         # Turn inputs into movement
-        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, level)        
+        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)        
     
         # Calculate and update position
         player.calculatePosition()
@@ -92,11 +92,12 @@ while True:
     # Debug
         if (DEBUG):
             if keys[pygame.K_0]:
-                mario.hurt()
+                mario.powerupHandler(0)
+                luigi.powerupHandler(0)
 
             if keys[pygame.K_1]:
-                mario.powerupState = 2
-                mario.hurt()
+                mario.powerupHandler(1)
+                luigi.powerupHandler(1)
         
     # Limit the framerate to 60 FPS
     tick(60)
@@ -116,4 +117,5 @@ while True:
     # Limits the frame rate of sprites (60 FPS walk cycle is bad)
     if clock() > nextFrame:
         frame = (frame+1)%2
+        superFrame = (superFrame+1)%3
         nextFrame += 60
