@@ -8,7 +8,7 @@
 
 import socket
 from _thread import *
-from player import Player
+from player import player_movement
 import pygame
 import pickle
 
@@ -25,9 +25,8 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-mario = Player("Sprites/Mario/")
-luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_LSHIFT]\
-                   , 1, 15, 100, 10, 20)
+mario = player_movement()
+luigi = player_movement()
 players = [mario,luigi]
 
 def threaded_client(conn, player):
@@ -43,10 +42,9 @@ def threaded_client(conn, player):
                 break
             else:
                 if player == 1:
-                    reply = players[0]
+                    reply = players[0],players[1],player
                 else:
-                    reply = players[1]
-
+                    reply = players[0],players[1],player
             conn.sendall(pickle.dumps(reply))
         except:
             break

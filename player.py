@@ -18,18 +18,8 @@ GRAVITY = 2.8
 jump = makeSound("Sounds/jump.wav")
 
 class player_movement(object):
-    def __init__(self, player_number = 0, x = 50, y = 100):
-        self.player_number = player_number
-        self.x = x
-        self.y = y
-        self.x_velocity = 0.00
-        self.y_velocity = 0.00
-        self.last_held_direction = "right"
-        self.idle = False
-        self.skidding = False
-        self.keys = []
-        self.powerupState = 0
-        self.sprinting = False
+    def __init__(self):
+        self.key = []
 
 class Player(object):
     def __init__(self, playerSprites = None, controls = [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RSHIFT]\
@@ -394,23 +384,23 @@ class Player(object):
                 self.animationController("idle", last_held_direction, frame, superFrame)
 
         # Set the last held direction to right, and update the player's walk animation if they're on the ground
-        if keys[pygame.K_z]:
+        if self.keys[pygame.K_z]:
             print(self.y)
             
-        if keys[self.sprint]:
+        if self.keys[self.sprint]:
             self.SPEED_CAP = 4
             self.ACCELERATION = 0.075
         else:
             self.SPEED_CAP = 2
             self.ACCELERATION = .07
         
-        if keys[self.right]:
+        if self.keys[self.right]:
             self.last_held_direction = "right"
 
             # Check to see if the player is on the ground before applying the sprite change
             if (self.check_jump(cmap) == True):
                 # Check to see if ducking
-                if keys[self.down]:
+                if self.keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
                     self.Friction()
                 else:
@@ -424,16 +414,16 @@ class Player(object):
             else:
                 self.HorizontalVelocity(self.last_held_direction, self.skidding, playerSprite)
             # Change Sprite to ducking sprite if down is held
-            if keys[self.down]:
+            if self.keys[self.down]:
                 self.animationController("duck", last_held_direction, frame, superFrame)
 
         # Set the last held direction to left, and update the player's walk animation if they're on the ground           
-        elif keys[self.left]:
+        elif self.keys[self.left]:
             self.last_held_direction = "left"
             # Check to see if the player is on the ground before applying the sprite change
             if (self.check_jump(cmap) == True):
                 # Check to see if ducking
-                if keys[self.down]:
+                if self.keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
                     self.Friction()
                 else:
@@ -447,10 +437,10 @@ class Player(object):
             else:
                 self.HorizontalVelocity(self.last_held_direction, self.skidding, playerSprite)                
             # Change Sprite to ducking sprite if down is held
-            if keys[self.down]:
+            if self.keys[self.down]:
                 self.animationController("duck", last_held_direction, frame, superFrame)
 
-        elif keys[self.down]:
+        elif self.keys[self.down]:
             # If the player is on the ground, make them duck
             if self.check_jump(cmap) == True:
                 self.animationController("duck", last_held_direction, frame, superFrame)
@@ -464,14 +454,14 @@ class Player(object):
             self.Friction()
 
         # Check to see if the player can jump
-        if keys[self.up]:
+        if self.keys[self.up]:
             if self.check_jump(cmap) == True and self.released_up == True:
                 # Update the player's sprite, then apply vertical velocity
                 self.animationController("jump", last_held_direction, frame, superFrame)
                 self.VerticalVelocity()
                 playSound(jump)
                 self.released_up = False
-                if keys[self.down]:
+                if self.keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
 
             else:
@@ -479,7 +469,7 @@ class Player(object):
                 if (self.y_velocity > 0):
                     self.animationController("fall", last_held_direction, frame, superFrame)
                 self.gravity(GRAVITY,level,cmap)
-                if keys[self.down]:
+                if self.keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
             
 
@@ -491,15 +481,18 @@ class Player(object):
                 self.animationController("fall", last_held_direction, frame, superFrame)
             self.gravity(GRAVITY,level,cmap)
             self.released_up = True
-            if keys[self.down]:
+            if self.keys[self.down]:
                 self.animationController("duck", last_held_direction, frame, superFrame)
 
         else:
-            if keys[self.down]:
+            if self.keys[self.down]:
                 self.animationController("down", last_held_direction, frame, superFrame)
             self.gravity(GRAVITY,level,cmap)
             self.released_up = True
         self.y = round(self.y)
+
+    def get_key(self):
+        return pygame.key.get_pressed()
 
     # Print stats of the player when called
     def __str__(self):

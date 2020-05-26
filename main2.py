@@ -17,8 +17,6 @@ import sys
 from level import *
 from player import *
 from cmap import *
-from network import Network
-import pickle
 
 # Allows us to use another folder than the folder this file is located
 sys.path.insert(1, "./Sprites")
@@ -29,12 +27,6 @@ sys.path.insert(1, "./Sprites")
 ##########--END CLASSES--##########
 #---------------------------------#
 ##########--BEING FUNCTIONS--######
-def read_pos(str):
-    str = str.split(",")
-    return int(str[0]), int(str[1])
-
-def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
 ##########--END FUNCTIONS--########
 #---------------------------------#
 ##########-Begin Main Code-########
@@ -59,18 +51,17 @@ screen = screenSize(WIDTH, HEIGHT, None, None, False)
 frame = 0
 superFrame = 0
 nextFrame = clock()
-n = Network()
+
 # Create a player
 mario = Player("Sprites/Mario/")
-mm = player_movement()
 
 if P2: #Experimental 
-    luigi = Player("Sprites/Luigi/", [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RSHIFT]\
+    luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_LSHIFT]\
                    , 1, 15, 100, 10, 20)
-    lm = player_movement()
     players = [mario, luigi]
 else:
     players = [mario]
+    
 # Load the Player's sprites
 for player in players:
     # The powerup handler already creates the player sprite, so use this to initalize the players
@@ -80,39 +71,31 @@ while True:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT: sys.exit()
-    mm.key = players[0].get_key()
-    confirmed_controls = n.send(mm)
-    players[0].keys = confirmed_controls[0].key
-    players[1].keys = confirmed_controls[1].key
+    keys = pygame.key.get_pressed()
 
-    if players[0].keys == []:
-        players[0].keys = players[0].get_key()
-    if players[1].keys == []:
-        players[1].keys = players[0].keys
-
+    # Get player inputs
     for player in players:
-        # Get player inputs
         # Turn inputs into movement
-        player.RefineInput(player.keys, cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)
-
+        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)        
+    
         # Calculate and update position
         player.calculatePosition()
-        updated_position = player.check_collision(cmap)
+        updated_position = player.check_collision(cmap)        
         player.x = updated_position[0]
         player.y = updated_position[1]
         player.x_velocity = updated_position[2]
         player.y_velocity = updated_position[3]
 
-        player.death()
         # Check for death
+        player.death()
 
-        # Debug
+    # Debug
         if (DEBUG):
-            if player.keys[pygame.K_0]:
+            if keys[pygame.K_0]:
                 mario.powerupHandler(0)
                 luigi.powerupHandler(0)
 
-            if player.keys[pygame.K_1]:
+            if keys[pygame.K_1]:
                 mario.powerupHandler(1)
                 luigi.powerupHandler(1)
         
