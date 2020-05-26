@@ -6,6 +6,7 @@
 from pygame_functions import *
 from level import *
 from cmap import *
+from network import Network
 SIZE = WIDTH, HEIGHT = 256, 192
 wrap_around = True
 
@@ -15,6 +16,20 @@ GRAVITY = 2.8
 
 # Create player sound effects
 jump = makeSound("Sounds/jump.wav")
+
+class player_movement(object):
+    def __init__(self, player_number = 0, x = 50, y = 100):
+        self.player_number = player_number
+        self.x = x
+        self.y = y
+        self.x_velocity = 0.00
+        self.y_velocity = 0.00
+        self.last_held_direction = "right"
+        self.idle = False
+        self.skidding = False
+        self.keys = []
+        self.powerupState = 0
+        self.sprinting = False
 
 class Player(object):
     def __init__(self, playerSprites = None, controls = [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RSHIFT]\
@@ -31,6 +46,7 @@ class Player(object):
         self.y = y
         self.x_velocity = 0.00
         self.y_velocity = 0.00
+        self.start_pos = (self.x,self.y)
 
         # Number is from height/width of the player sprite in pixles
         self.width = width
@@ -55,6 +71,7 @@ class Player(object):
         self.left = controls[2]
         self.right = controls[3]
         self.sprint = controls[4]
+        self.keys = []
 
         # Define misc. Player variables
         self.last_held_direction = "right"
@@ -66,7 +83,7 @@ class Player(object):
         self.powerupState = 0
         self.released_up = True
         self.sprinting = False
-    
+
     def gravity(self, gravity, level, cmap):
         p_weight = self.weight
         if ((self.y_velocity >= self.VSPEED_CAP) and (self.y_velocity < 0)):
@@ -114,7 +131,7 @@ class Player(object):
                     changeSpriteImage(self.playerSprite, 9)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 4)
-            
+
             elif (action == "fall"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 8)
@@ -138,7 +155,7 @@ class Player(object):
                     changeSpriteImage(self.playerSprite, 14)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 15)
-            
+
             elif (action == "duck"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 17)
@@ -151,13 +168,13 @@ class Player(object):
                     changeSpriteImage(self.playerSprite, 17)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 0)
-            
+
             elif (action == "jump"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 11)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 6)
-            
+
             elif (action == "fall"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 10)
@@ -169,19 +186,19 @@ class Player(object):
                     changeSpriteImage(self.playerSprite, 17 - superFrame)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 0 + superFrame)
-            
+
             elif (action == "run"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 14 - superFrame)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 3 + superFrame)
-            
+
             elif (action == "skidding"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 18)
                 elif (last_held_direction == "left"):
                     changeSpriteImage(self.playerSprite, 19)
-            
+
             elif (action == "duck"):
                 if (last_held_direction == "right"):
                     changeSpriteImage(self.playerSprite, 21)
@@ -193,7 +210,7 @@ class Player(object):
             hideSprite(self.playerSprite)
         self.playerSprite = makeSprite(newSprite, frames)
         showSprite(self.playerSprite)
-    
+
     def powerupHandler(self, powerupID):
         # 0 - Small
         # 1 - Super
@@ -220,7 +237,7 @@ class Player(object):
             elif (self.player_number == 1):
                 self.draw_height  = -23
                 self.height = 15
-            
+
             spriteSheet = self.playerSprites + "small.png"
             self.spriteChanger(spriteSheet, 18)
             return spriteSheet
@@ -488,3 +505,4 @@ class Player(object):
     def __str__(self):
         return "Player X Velocity: {}\nPlayer Y Velocity: {}\nPlayer X: {}\nPlayer Y: {}"\
             .format(self.x_velocity, self.y_velocity, self.x, self.y)
+

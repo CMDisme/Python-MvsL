@@ -17,6 +17,8 @@ import sys
 from level import *
 from player import *
 from cmap import *
+from network import Network
+import pickle
 
 # Allows us to use another folder than the folder this file is located
 sys.path.insert(1, "./Sprites")
@@ -27,6 +29,12 @@ sys.path.insert(1, "./Sprites")
 ##########--END CLASSES--##########
 #---------------------------------#
 ##########--BEING FUNCTIONS--######
+def read_pos(str):
+    str = str.split(",")
+    return int(str[0]), int(str[1])
+
+def make_pos(tup):
+    return str(tup[0]) + "," + str(tup[1])
 ##########--END FUNCTIONS--########
 #---------------------------------#
 ##########-Begin Main Code-########
@@ -51,13 +59,15 @@ screen = screenSize(WIDTH, HEIGHT, None, None, False)
 frame = 0
 superFrame = 0
 nextFrame = clock()
-
+n = Network()
 # Create a player
 mario = Player("Sprites/Mario/")
+mm = player_movement()
 
 if P2: #Experimental 
     luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_LSHIFT]\
                    , 1, 15, 100, 10, 20)
+    lm = player_movement(1,15,100)
     players = [mario, luigi]
 else:
     players = [mario]
@@ -72,24 +82,48 @@ while True:
     for event in events:
         if event.type == pygame.QUIT: sys.exit()
     keys = pygame.key.get_pressed()
+    mm.x = players[0].x
+    mm.y = players[0].y
+    mm.x_velocity = players[0].x_velocity
+    mm.y_velocity = players[0].y_velocity
+    mm.last_held_direction = players[0].last_held_direction
+    mm.idle = players[0].idle
+    mm.skidding = players[0].skidding
+    mm.keys = players[0].keys
+    mm.powerupState = players[0].powerupState
+    mm.sprinting = players[0].sprinting
 
-    # Get player inputs
+    luigipos = n.send(mm)
+    lm = luigipos
+    players[1].x = lm.x
+    players[1].y = lm.y
+    players[1].x_velocity = lm.x_velocity
+    players[1].y_velocity = lm.y_velocity
+    players[1].last_held_direction = lm.last_held_direction
+    players[1].skidding = lm.skidding
+    players[1].idle = lm.idle
+    players[1].keys = lm.keys
+    players[1].powerupState = lm.powerupState
+    players[1].sprinting = lm.sprinting
+
+
     for player in players:
+        # Get player inputs
         # Turn inputs into movement
-        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)        
-    
+        player.RefineInput(keys, cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)
+
         # Calculate and update position
         player.calculatePosition()
-        updated_position = player.check_collision(cmap)        
+        updated_position = player.check_collision(cmap)
         player.x = updated_position[0]
         player.y = updated_position[1]
         player.x_velocity = updated_position[2]
         player.y_velocity = updated_position[3]
 
-        # Check for death
         player.death()
+        # Check for death
 
-    # Debug
+        # Debug
         if (DEBUG):
             if keys[pygame.K_0]:
                 mario.powerupHandler(0)
