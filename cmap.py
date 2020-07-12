@@ -160,7 +160,7 @@ class CMap():
               if self.check_box(x-i,y+i,pw,ph) != 1:
                   return [x-i,y+i,xv,yv,True]
                 
-          return [x,y,xv,yv,False]
+          return [x+1,y,0,0,False]
 
     # Looks at collision map and checks if player is on a tile
     def on_tile(self,x,y,pw,ph):

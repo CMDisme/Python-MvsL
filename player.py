@@ -35,8 +35,7 @@ class Player(object):
         self.playerSprites = playerSprites
 
         # Player Positioning variables
-        self.temp_position = [10,0]
-        self.position = np.array((10, 0), int)
+        self.position = np.array((x, y), int)
         self.velocity = np.array((0, 0), int)
         self.gravity = np.array((0, GRAVITY),int)
 
@@ -460,6 +459,7 @@ class Player(object):
                     self.animationController("duck", last_held_direction, frame, superFrame)
                     # Add friction to the player
                     self.velocity = (self.Friction(x),y)
+                    self.height = 15
 
                 else:
                     # Update the player's velocity
@@ -469,12 +469,17 @@ class Player(object):
                     else:
                         self.animationController("run", last_held_direction, frame, superFrame)
                     self.velocity = (x+self.ACCELERATION, y)
+                    if self.powerupState != 0:
+                        self.height = 27
             else:
                 self.velocity = (x+self.ACCELERATION, y)
 
             # Change Sprite to ducking sprite if down is held
             if keys[self.down]:
                 self.animationController("duck", last_held_direction, frame, superFrame)
+                self.height = 15
+            elif self.powerupState != 0:
+                self.height = 27
 
         # Set the last held direction to left, and update the player's walk animation if they're on the ground           
         elif keys[self.left]:
@@ -486,6 +491,7 @@ class Player(object):
                 if keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
                     # Add friction to the player
+                    self.height = 15
                     self.velocity = (self.Friction(x),y)
 
                 else:
@@ -496,6 +502,8 @@ class Player(object):
                     else:
                         self.animationController("run", last_held_direction, frame, superFrame)
                     # Add acceleration to the velocity
+                    if self.powerupState != 0:
+                        self.height = 27
                     self.velocity = (x-self.ACCELERATION, y)
             else:
                 # Add acceleration to the velocity
@@ -503,9 +511,13 @@ class Player(object):
             # Change Sprite to ducking sprite if down is held
             if keys[self.down]:
                 self.animationController("duck", last_held_direction, frame, superFrame)
+                self.height = 15
+            elif self.powerupState != 0:
+                self.height = 27
 
         elif keys[self.down]:
             # If the player is on the ground, make them duck
+            self.height = 15
             if self.check_jump(cmap) == True:
                 self.animationController("duck", last_held_direction, frame, superFrame)
             # Apply friction to the player
@@ -527,13 +539,19 @@ class Player(object):
                 self.released_up = False
                 if keys[self.down]:
                     self.animationController("duck", last_held_direction, frame, superFrame)
+                    self.height = 15
+                elif self.powerupState != 0:
+                    self.height = 27
 
             else:
                 # Update the player's sprite if the peak of the jump has been passed, then apply gravity
                 if (y > 0):
                     self.animationController("fall", last_held_direction, frame, superFrame)
                 if keys[self.down]:
+                    self.height = 15
                     self.animationController("duck", last_held_direction, frame, superFrame)
+                elif self.powerupState != 0:
+                    self.height = 27
 
         # Apply gravity to the player
         elif (self.check_jump(cmap) == False):
@@ -542,11 +560,17 @@ class Player(object):
                 self.animationController("fall", last_held_direction, frame, superFrame)
             self.released_up = True
             if keys[self.down]:
+                self.height = 15
                 self.animationController("duck", last_held_direction, frame, superFrame)
+            elif self.powerupState != 0:
+                self.height = 27
 
         else:
             if keys[self.down]:
+                self.height = 15
                 self.animationController("down", last_held_direction, frame, superFrame)
+            elif self.powerupState != 0:
+                self.height = 27
             self.released_up = True
 
         if keys[self.sprint]:
