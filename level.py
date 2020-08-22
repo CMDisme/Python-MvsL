@@ -71,8 +71,6 @@ class Level():
           at_end = True
           break
         tile[list(tile)[i]] = int.from_bytes(short,  byteorder='big')
-<<<<<<< Updated upstream
-=======
         # Allows for many tile types, if you want to add more, follow the formula
 
         if tile["id"] == 1:
@@ -114,9 +112,8 @@ class Level():
         elif tile["id"] == 19:
             tile_image = load_texture(dirname + "/Tiles/barrier.png")
 
->>>>>>> Stashed changes
       if not at_end:
-        self.tiles.append(Tile("Tiles/Grass_Top.png",1, tile["x"] * 16, tile["y"] * 16, tile["width"] * 16, tile["height"] * 16))
+        self.tiles.append(Tile(tile_image,1, tile["x"] * 16, tile["y"] * 16, tile["width"] * 16, tile["height"] * 16))
 
   def read_sprites(self):
     self.file.read(4) # do nothing with magic

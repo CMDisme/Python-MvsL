@@ -24,8 +24,6 @@ dirname = os.path.dirname(__file__)
 
 
 ##########--BEGIN CLASSES--##########
-<<<<<<< Updated upstream
-=======
 class Camerat(object):
     def __init__(self):
         # Sets the camera position to player 0, originally planned to use a tuple for x and y but abandoned that
@@ -58,7 +56,6 @@ class Camerat(object):
         elif self.camera < player.position[0] - 246:
             self.camera = player.position[0] - 246
 
->>>>>>> Stashed changes
 
 class Game(object):
     def __init__(self):
@@ -78,27 +75,6 @@ class Game(object):
             draw_text('Press "A" to start!', 200, 200, 20, LIGHTGRAY)
             end_drawing()
 
-<<<<<<< Updated upstream
-            for event in pygame.event.get():
-                print(event)
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-
-            if keys[pygame.K_SPACE]:
-                intro = False
-                    
-            screen.fill(WHITE)
-            largeText = pygame.font.Font('freesansbold.ttf', 100)
-            TextSurf, TextRect = self.text_objects("Mario vs Luigi", largeText)
-            TextRect.center = ((800/2),(600/2))
-            screen.blit(TextSurf, TextRect)
-            pygame.display.update()
-            tick(15)
-        
-        # Run the game if the title screen is cleared
-        self.gameLoop()
-=======
             if is_key_down(KEY_A):
                 intro = False
             
@@ -106,7 +82,6 @@ class Game(object):
             if intro == False:
                 close_window()
                 self.gameLoop()
->>>>>>> Stashed changes
 
     def gameLoop(self):
 
@@ -117,22 +92,12 @@ class Game(object):
 
         inGame = True
 
-<<<<<<< Updated upstream
-        # Load Level Data
-        levelchunk1 = []
-
-        # This recreates the collision map automatically
-        cmap = CMap("Cmap/1-1.cmap")
-        cmap.create_cmap("Levels/1-1.lvl")
-        level = Level("Levels/1-1.lvl")
-=======
         # This creates the collision map and the camera collision map from the level file automatically
         #TODO: Fix relative path for 1-1.lvl file (to run, you'll need the entire file path)
         cmap = CMap(dirname + "Cmap/1-1.cmap")
         cmap.create_cmap(dirname + "/Levels/1-1.lvl")
         cmap.create_camera_map(dirname + "/Levels/1-1.lvl")
         level = Level(dirname + "/Levels/1-1.lvl")
->>>>>>> Stashed changes
 
         # Frame handler (used for any sprite animation)
         frame = 0
@@ -143,14 +108,6 @@ class Game(object):
         mario = Player(dirname + "/Sprites/Mario/")
 
         if P2: #Experimental 
-<<<<<<< Updated upstream
-            luigi = Player("Sprites/Luigi/", [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_q, pygame.K_LSHIFT]\
-                        , 1, 15, 100, 10, 20)
-            self.players = [mario, luigi]
-        else:
-            self.players = [mario]
-            
-=======
             luigi = Player(dirname + "/Sprites/Luigi/", [KEY_W, KEY_S, KEY_A, KEY_D, KEY_Q, KEY_LEFT_SHIFT]\
                         , 1, 10, 20)
             self.players = [mario, luigi]
@@ -169,7 +126,6 @@ class Game(object):
 
         print(camera.__class__, Camera2D.__class__)
 
->>>>>>> Stashed changes
         # Load the Player's sprites
         for player in self.players:
             # The powerup handler already creates the player sprite, so use this to initalize the players
@@ -186,21 +142,11 @@ class Game(object):
                 # Turn inputs into movement
                 player.RefineInput(cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)        
             
-<<<<<<< Updated upstream
-                # Calculate and update position
-                player.calculatePosition()
-                updated_position = player.check_collision(cmap)        
-                player.x = updated_position[0]
-                player.y = updated_position[1]
-                player.x_velocity = updated_position[2]
-                player.y_velocity = updated_position[3]
-=======
                 # Calculate and update player position
                 player.calculatePosition(10, cmap)
                 updated_position = player.check_collision(cmap)
                 player.position = (updated_position[0], updated_position[1])
                 player.velocity = (updated_position[2], updated_position[3])
->>>>>>> Stashed changes
 
                 # Check for death
                 player.death()
@@ -224,9 +170,6 @@ class Game(object):
                     # Return to the title screen
                     if is_key_down(KEY_NINE):
                         self.clearGame()
-<<<<<<< Updated upstream
-                
-=======
 
             # Detect if player moved
             if round(self.players[0].position[0]) > old_x:
@@ -262,7 +205,6 @@ class Game(object):
             #Update the camera
 
 
->>>>>>> Stashed changes
             # Limit the framerate to 60 FPS
             set_target_fps(60)
 
@@ -272,15 +214,8 @@ class Game(object):
             clear_background(RAYWHITE)
 
             for tile in level.tiles:
-                for w in range(int(tile.width / 16)):
+                for w in range(int((tile.width) / 16)):
                     for h in range(int(tile.height / 16)):
-<<<<<<< Updated upstream
-                        screen.blit(pygame.image.load(tile.tile_image), [tile.x + (w * 16), tile.y - (h * 16)])
-
-            # Update the player's sprite location
-            for player in self.players:
-                moveSprite(player.playerSprite, player.x + player.draw_width, player.y + player.draw_height)
-=======
                         # (Image to load, [(left coord of tile * width) - View, (bottom coord of tile - height)])
                         draw_texture(tile.tile_image, tile.x + (w * 16)- view[0], tile.y + (h * 16), RAYWHITE)
 
@@ -299,7 +234,6 @@ class Game(object):
                 draw_texture_rec(player.playerSprite, player.frame_rec, tempPosition, RAYWHITE)
             end_mode2d()
             end_drawing()
->>>>>>> Stashed changes
 
             # Limits the frame rate of sprites (60 FPS walk cycle is bad)
             if get_time() > nextFrame:
