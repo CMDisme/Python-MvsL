@@ -5,9 +5,11 @@
 ########################################################################
 
 #Add the path to the tile images folder
-import sys
+import os
 from cmap import *
-sys.path.insert(1, "./Tiles")
+from raylibpy import load_texture
+
+dirname = os.path.dirname(__file__)
 
 class Tile(object):
     def __init__(self, tile_image, tile_friction, x, y, width = 16, height = 16):
@@ -69,6 +71,50 @@ class Level():
           at_end = True
           break
         tile[list(tile)[i]] = int.from_bytes(short,  byteorder='big')
+<<<<<<< Updated upstream
+=======
+        # Allows for many tile types, if you want to add more, follow the formula
+
+        if tile["id"] == 1:
+            tile_image = load_texture(dirname + "/Tiles/Grass_0.png")
+        elif tile["id"] == 2:
+            tile_image = load_texture(dirname + "/Tiles/Grass_1.png")
+        elif tile["id"] == 3:
+            tile_image = load_texture(dirname + "/Tiles/Grass_2.png")
+        elif tile["id"] == 4:
+            tile_image = load_texture(dirname + "/Tiles/Grass_3.png")
+        elif tile["id"] == 5:
+            tile_image = load_texture(dirname + "/Tiles/Grass_4.png")
+        elif tile["id"] == 6:
+            tile_image = load_texture(dirname + "/Tiles/Grass_5.png")
+        elif tile["id"] == 7:
+            tile_image = load_texture(dirname + "/Tiles/Grass_6.png")
+        elif tile["id"] == 8:
+            tile_image = load_texture(dirname + "/Tiles/Grass_7.png")
+        elif tile["id"] == 9:
+            tile_image = load_texture(dirname + "/Tiles/Grass_8.png")
+        elif tile["id"] == 10:
+            tile_image = load_texture(dirname + "/Tiles/Grass_9.png")
+        elif tile["id"] == 11:
+            tile_image = load_texture(dirname + "/Tiles/Grass_10.png")
+        elif tile["id"] == 12:
+            tile_image = load_texture(dirname + "/Tiles/Grass_11.png")
+        elif tile["id"] == 13:
+            tile_image = load_texture(dirname + "/Tiles/Grass_12.png")
+        elif tile["id"] == 14:
+            tile_image = load_texture(dirname + "/Tiles/Pipe_1.png")
+        elif tile["id"] == 15:
+            tile_image = load_texture(dirname + "/Tiles/Pipe_2.png")
+        elif tile["id"] == 16:
+            tile_image = load_texture(dirname + "/Tiles/Pipe_3.png")
+        elif tile["id"] == 17:
+            tile_image = load_texture(dirname + "/Tiles/Pipe_4.png")
+        elif tile["id"] == 18:
+            tile_image = load_texture(dirname + "/Tiles/Stone.png")
+        elif tile["id"] == 19:
+            tile_image = load_texture(dirname + "/Tiles/barrier.png")
+
+>>>>>>> Stashed changes
       if not at_end:
         self.tiles.append(Tile("Tiles/Grass_Top.png",1, tile["x"] * 16, tile["y"] * 16, tile["width"] * 16, tile["height"] * 16))
 

@@ -5,6 +5,9 @@
 
 # Thanks to SkilLP, we now have a collision map, much more
 # efficient when compared to how collision was done before
+import sys
+
+sys.path.insert(1, "./Levels")
 
 class CMap():
     def __init__(self, file = "Level/1-1.lvl"):
@@ -49,7 +52,36 @@ class CMap():
             if 1 in temp_map[round(x/16):round((x+b)/16)+1]:
                 collisions = 1
         return collisions
+<<<<<<< Updated upstream
             
+=======
+
+    # This does what check_box() does for the camera
+    def check_camera_box(self,x,y,b,h):
+        # Temporary variable
+        collisions = 0
+        for o in range(round(int(y-h))//16,round(int(y))//16+1):
+            # A horizontal slice of the camera collision map to check for collisions
+            temp_map = self.camera_map[o]
+            # If there is a collision in the slice, change the temporary collision variable to 1 (True)
+            if 1 in temp_map[int(round(x//16)):int(round((x+b)//16)+1)]:
+                collisions = 1
+        # If there is a collision, this should return 1. If not, then it should return 0.
+        return collisions
+
+    # This does what nearest_surface() does for the camera. Only supports x axis
+    def nearest_good_x_camera_pos(self,x,y,b,h):
+        # This could be inefficient, but we do not run this every frame
+        # This finds the nearest safe space for the camera to sit when next to a camera barrier and returns it
+        for i in range(256):
+            if self.check_camera_box(x-i,y,b,h) != 1:
+                # Returns "True" to show that the camera is no longer moving and is next to a barrier
+                return [x-i,y,True,False]
+            if self.check_camera_box(x+i,y,b,h) != 1:
+                # Returns "True" to show that the camera is no longer moving and is next to a barrier
+                return [x+i,y,True,False]
+
+>>>>>>> Stashed changes
     # Detects if a player is in a tile and puts the player
     # on the nearest open surface
     def in_tile(self,x,y,xv,yv,pw,ph):
