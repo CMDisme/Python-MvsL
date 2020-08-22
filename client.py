@@ -56,7 +56,6 @@ class Camerat(object):
         elif self.camera < player.position[0] - 246:
             self.camera = player.position[0] - 246
 
-
 class Game(object):
     def __init__(self):
         self.players = []
@@ -143,7 +142,7 @@ class Game(object):
                 player.RefineInput(cmap, player.playerSprite, player.last_held_direction, frame, superFrame, level)        
             
                 # Calculate and update player position
-                player.calculatePosition(10, cmap)
+                player.calculatePosition(cmap, player.jumpTimer)
                 updated_position = player.check_collision(cmap)
                 player.position = (updated_position[0], updated_position[1])
                 player.velocity = (updated_position[2], updated_position[3])
@@ -202,22 +201,20 @@ class Game(object):
             if view[2] == False:
                 view = cmap.nearest_good_x_camera_pos(round(old_view), 192, 256, 192)
 
-            #Update the camera
-
-
             # Limit the framerate to 60 FPS
             set_target_fps(60)
 
             #Render the screen
             begin_drawing()
             begin_mode2d(camera)
+
             clear_background(RAYWHITE)
 
             for tile in level.tiles:
                 for w in range(int((tile.width) / 16)):
                     for h in range(int(tile.height / 16)):
                         # (Image to load, [(left coord of tile * width) - View, (bottom coord of tile - height)])
-                        draw_texture(tile.tile_image, tile.x + (w * 16)- view[0], tile.y + (h * 16), RAYWHITE)
+                        draw_texture(tile.tile_image, tile.x + (w * 16) - view[0], tile.y + (h * 16), RAYWHITE)
 
 
             # Update the player's sprite location
@@ -232,6 +229,7 @@ class Game(object):
                 tempPosition = Vector2(tempX, tempY)
 
                 draw_texture_rec(player.playerSprite, player.frame_rec, tempPosition, RAYWHITE)
+
             end_mode2d()
             end_drawing()
 
