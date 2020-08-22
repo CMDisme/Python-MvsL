@@ -24,6 +24,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunManager">
     <configuration name="client" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -53,6 +54,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -71,24 +73,28 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="962" y="437" key="#com.jetbrains.python.refactoring.move.PyMakeFunctionTopLevelDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591707847222" />
-    <state width="2539" height="375" key="GridCell.Tab.0.bottom" timestamp="1594589663796">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1364" height="195" key="GridCell.Tab.0.bottom" timestamp="1598134518346">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state width="1364" height="195" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1598134518346" />
     <state width="1514" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1591801986220" />
     <state width="2539" height="375" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1594589663796" />
-    <state width="2539" height="375" key="GridCell.Tab.0.center" timestamp="1594589663796">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1364" height="195" key="GridCell.Tab.0.center" timestamp="1598134518346">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state width="1364" height="195" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1598134518346" />
     <state width="1514" height="249" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1591801986220" />
     <state width="2539" height="375" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1594589663796" />
-    <state width="2539" height="375" key="GridCell.Tab.0.left" timestamp="1594589663796">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1364" height="195" key="GridCell.Tab.0.left" timestamp="1598134518346">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state width="1364" height="195" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1598134518346" />
     <state width="1514" height="249" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1591801986220" />
     <state width="2539" height="375" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1594589663796" />
-    <state width="2539" height="375" key="GridCell.Tab.0.right" timestamp="1594589663796">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1364" height="195" key="GridCell.Tab.0.right" timestamp="1598134518346">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state width="1364" height="195" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1598134518346" />
     <state width="1514" height="249" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1591801986220" />
     <state width="2539" height="375" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1594589663796" />
     <state width="2539" height="492" key="GridCell.Tab.1.bottom" timestamp="1592326894929">
@@ -107,6 +113,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="492" key="GridCell.Tab.1.right/0.0.2560.1400@0.0.2560.1400" timestamp="1592326894929" />
+    <state x="277" y="57" key="SettingsEditor" timestamp="1598134155314">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1598134155314" />
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1594570968709">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

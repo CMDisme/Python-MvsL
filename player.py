@@ -21,7 +21,7 @@ GRAVITY = 0.149
 
 class Player(object):
     def __init__(self, playerSprites = None, controls = [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_SPACE, KEY_RIGHT_SHIFT]\
-                 , player_number = 0, x = 50, y = 50, width = 10, height = 20, draw_width = -4, draw_height = -13):
+                 , player_number = 0, x = 50, y = 50, width = 12, height = 20, draw_width = -4, draw_height = -13):
         # Keep track of the player number
         self.player_number = player_number
 
